@@ -1,0 +1,40 @@
+/* CSS Animations */@keyframes slide-out-left {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+}
+
+@keyframes slide-out-right {
+    from { transform: translateX(0); }
+    to { transform: translateX(100%); }
+}
+
+@keyframes slide-in-right {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}
+
+@keyframes slide-in-left {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+
+/* Classes to apply these animations */
+.slide-out-left {
+  animation: slideOutToLeft 0.5s ease forwards;
+}
+
+.slide-out-right {
+  animation: slideOutToRight 0.5s ease forwards;
+}
+
+.slide-in-right {
+  animation: slideInFromRight 0.5s ease forwards;
+}
+
+.slide-in-left {
+  animation: slideInFromLeft 0.5s ease forwards;
+}
+
+
+.hidden{display: none;}
