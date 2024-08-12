@@ -2,63 +2,81 @@ import wixLocation from 'wix-location';
 
 $w.onReady(function () {
     const states = ['box1', 'box2', 'box33', 'box34'];
-    let stateNum = 0;
-    const menu = $w('#hamburgerMenuContainer2');
+let stateNum = 0;
+const menu = $w('#hamburgerMenuContainer2');
+let autoNextInterval;
 
-    function updateState(direction) {
-        const previousStateNum = stateNum;
-        stateNum = direction === 'next' 
-            ? (stateNum + 1) % states.length 
-            : (stateNum - 1 + states.length) % states.length;
+function updateState(direction) {
+    const previousStateNum = stateNum;
+    stateNum = direction === 'next' 
+        ? (stateNum + 1) % states.length 
+        : (stateNum - 1 + states.length) % states.length;
 
-        const previousElement = $w(`#${states[previousStateNum]}`);
-        const currentElement = $w(`#${states[stateNum]}`);
+    const previousElement = $w(`#${states[previousStateNum]}`);
+    const currentElement = $w(`#${states[stateNum]}`);
 
-        console.log(`Transitioning from ${states[previousStateNum]} to ${states[stateNum]}`);
+    console.log(`Transitioning from ${states[previousStateNum]} to ${states[stateNum]}`);
 
-        // Ensure previous element is visible
-        previousElement.show().then(() => {
+    // Ensure previous element is visible
+    previousElement.show().then(() => {
+        // Force a reflow to ensure visibility is applied
+        previousElement.style.display = 'block';
+        previousElement.style.animation = direction === 'next' 
+            ? 'slide-out-left 0.5s ease forwards' 
+            : 'slide-out-right 0.5s ease forwards';
+
+        // Ensure current element is also visible
+        currentElement.show().then(() => {
             // Force a reflow to ensure visibility is applied
-            previousElement.style.display = 'block';
-            previousElement.style.animation = direction === 'next' 
-                ? 'slide-out-left 0.5s ease forwards' 
-                : 'slide-out-right 0.5s ease forwards';
+            currentElement.style.display = 'block';
+            currentElement.style.animation = direction === 'next' 
+                ? 'slide-in-right 0.5s ease forwards' 
+                : 'slide-in-left 0.5s ease forwards';
 
-            // Ensure current element is also visible
-            currentElement.show().then(() => {
-                // Force a reflow to ensure visibility is applied
-                currentElement.style.display = 'block';
-                currentElement.style.animation = direction === 'next' 
-                    ? 'slide-in-right 0.5s ease forwards' 
-                    : 'slide-in-left 0.5s ease forwards';
+            // Change the state after a short delay to ensure animation completion
+            setTimeout(() => {
+                $w('#multiStateBox1').changeState(states[stateNum])
+                    .then(() => {
+                        console.log(`State changed to ${states[stateNum]}`);
+                    })
+                    .catch((error) => {
+                        console.error(`Error changing state to ${states[stateNum]}:`, error);
+                    });
+            }, 500); // Delay should match your animation duration
 
-                // Change the state after a short delay to ensure animation completion
-                setTimeout(() => {
-                    $w('#multiStateBox1').changeState(states[stateNum])
-                        .then(() => {
-                            console.log(`State changed to ${states[stateNum]}`);
-                        })
-                        .catch((error) => {
-                            console.error(`Error changing state to ${states[stateNum]}:`, error);
-                        });
-                }, 500); // Delay should match your animation duration
-
-                // Reset animations after transition
-                setTimeout(() => {
-                    previousElement.style.animation = '';
-                    currentElement.style.animation = '';
-                }, 500); // Duration should match your animation duration
-            });
+            // Reset animations after transition
+            setTimeout(() => {
+                previousElement.style.animation = '';
+                currentElement.style.animation = '';
+            }, 500); // Duration should match your animation duration
         });
-    }
+    });
+}
 
-    $w('#button7').onClick(() => {
+function startAutoNext(intervalTime) {
+    autoNextInterval = setInterval(() => {
         updateState('next');
-    });
+    }, intervalTime);
+}
 
-    $w('#button8').onClick(() => {
-        updateState('prev');
-    });
+function resetAutoNext(intervalTime) {
+    clearInterval(autoNextInterval);
+    startAutoNext(intervalTime);
+}
+
+// Start auto-next when the page loads
+startAutoNext(5000); // Adjust the time (5000ms = 5 seconds) as needed
+
+$w('#button7').onClick(() => {
+    resetAutoNext(5000); // Reset the auto-next timer
+    updateState('next');
+});
+
+$w('#button8').onClick(() => {
+    resetAutoNext(5000); // Reset the auto-next timer
+    updateState('prev');
+});
+
 
     // Scroll functionality remains the same
     $w('#button1').onClick(() => {
