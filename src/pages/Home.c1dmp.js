@@ -1,11 +1,12 @@
 import wixLocation from 'wix-location';
 
 $w.onReady(function () {
-    const states = ['box1', 'box2', 'box33', 'box34'];
+const states = ['box1', 'box2', 'box33', 'box34'];
 let stateNum = 0;
 const menu = $w('#hamburgerMenuContainer2');
 let autoNextInterval;
 
+// Function to update the state
 function updateState(direction) {
     const previousStateNum = stateNum;
     stateNum = direction === 'next' 
@@ -53,27 +54,30 @@ function updateState(direction) {
     });
 }
 
-function startAutoNext(intervalTime) {
+// Function to start auto-next
+function startAutoNext() {
     autoNextInterval = setInterval(() => {
         updateState('next');
-    }, intervalTime);
+    }, 5000); // Auto-next interval set to 5 seconds
 }
 
-function resetAutoNext(intervalTime) {
-    clearInterval(autoNextInterval);
-    startAutoNext(intervalTime);
+// Function to reset auto-next on button interaction
+function resetAutoNext() {
+    clearInterval(autoNextInterval); // Clear the existing interval
+    startAutoNext(); // Restart the auto-next interval
 }
 
 // Start auto-next when the page loads
-startAutoNext(5000); // Adjust the time (5000ms = 5 seconds) as needed
+startAutoNext();
 
+// Button click handlers
 $w('#button7').onClick(() => {
-    resetAutoNext(5000); // Reset the auto-next timer
+    resetAutoNext(); // Reset auto-next timer on click
     updateState('next');
 });
 
 $w('#button8').onClick(() => {
-    resetAutoNext(5000); // Reset the auto-next timer
+    resetAutoNext(); // Reset auto-next timer on click
     updateState('prev');
 });
 
