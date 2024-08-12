@@ -71,9 +71,14 @@ $w.onReady(function () {
         wixLocation.to('/?show=section1'); // Navigate back to the previous page in the browser history
     });
 
-    $w('#vectorImage8').onClick(() => {
+    $w('#imageX38').onClick(() => {
         console.log("Scroll to #section1 triggered by button6");
         wixLocation.to('/?show=section1');
+    });
+
+    $w('#imageX40').onClick(() => {
+        console.log("Scroll to #section1 triggered by button6");
+        $w('#section1').scrollTo();
     });
     
 });
