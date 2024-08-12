@@ -124,7 +124,12 @@ $w.onReady(function () {
 
     });
 
-    $w('#vectorImage3').onClick(() => {
+    $w('#imageX35').onClick(() => {
+        console.log("Scroll to #section1 triggered by button6");
+        $w('#section1').scrollTo();
+    });
+
+    $w('#imageX37').onClick(() => {
         console.log("Scroll to #section1 triggered by button6");
         $w('#section1').scrollTo();
     });
